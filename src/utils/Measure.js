@@ -370,7 +370,8 @@ Potree.Measure = class Measure extends THREE.Object3D {
 				let distance = point.position.distanceTo(nextPoint.position);
 
 				edgeLabel.position.copy(center);
-				edgeLabel.setText(Potree.utils.addCommas(distance.toFixed(2)) + ' ' + this.lengthUnit.code);
+				distance = distance / this.lengthUnit.unitspermeter * this.lengthUnitDisplay.unitspermeter;  //convert to meters then to the display unit
+				edgeLabel.setText(Potree.utils.addCommas(distance.toFixed(2)) + ' ' + this.lengthUnitDisplay.code);
 				edgeLabel.visible = this.showDistances && (index < lastIndex || this.closed) && this.points.length >= 2 && distance > 0;
 			}
 
@@ -428,7 +429,8 @@ Potree.Measure = class Measure extends THREE.Object3D {
 
 				let heightLabelPosition = start.clone().add(end).multiplyScalar(0.5);
 				this.heightLabel.position.copy(heightLabelPosition);
-				let msg = Potree.utils.addCommas(height.toFixed(2)) + ' ' + this.lengthUnit.code;
+				height = height / this.lengthUnit.unitspermeter * this.lengthUnitDisplay.unitspermeter;  //convert to meters then to the display unit
+				let msg = Potree.utils.addCommas(height.toFixed(2)) + ' ' + this.lengthUnitDisplay.code;
 				this.heightLabel.setText(msg);
 			}
 		}
@@ -436,7 +438,9 @@ Potree.Measure = class Measure extends THREE.Object3D {
 		{ // update area label
 			this.areaLabel.position.copy(centroid);
 			this.areaLabel.visible = this.showArea && this.points.length >= 3;
-			let msg = Potree.utils.addCommas(this.getArea().toFixed(1)) + ' ' + this.lengthUnit.code + '\u00B2';
+			let area = this.getArea();
+			area = area / Math.pow(this.lengthUnit.unitspermeter, 2) * Math.pow(this.lengthUnitDisplay.unitspermeter, 2);  //convert to square meters then to the square display unit
+			let msg = Potree.utils.addCommas(area.toFixed(1)) + ' ' + this.lengthUnitDisplay.code + '\u00B2';
 			this.areaLabel.setText(msg);
 		}
 	};
